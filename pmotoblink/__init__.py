@@ -21,10 +21,10 @@ class MotoBlinkRaw():
 		logging.debug('Requesting URL {}'.format(url))
 		response = requests.get(url)
 		logging.debug('Response code = {} and text = {}'.format(response.code, response.text))
-		if response.code == 200:
+		if response.status_code == 200:
 			return {'ok': True, 'text': response.text}
 		else:
-			return {'ok': False, 'text': response.code}
+			return {'ok': False, 'text': response.status_code}
 
 
 class MotoBlink():
@@ -37,9 +37,11 @@ class MotoBlink():
 	def __send_command(self, command, result_parser, value = None):
 		response = self._rawSender.send_command(command, value)
 
-		response_value = result_parser(response)
-
-		return response_value
+		if response['ok']:
+			response_value = result_parser(response['text'])
+			return response_value
+		else:
+			raise ValueError("Invalid response received {}".format(response.code))
 
 	def __select_command(self, command):
 		specific = self._specific[command]
