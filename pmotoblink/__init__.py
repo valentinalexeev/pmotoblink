@@ -20,7 +20,7 @@ class MotoBlinkRaw():
 			url = BASE_COMMAND_URL_FORMAT.format(self._address, command)
 		logging.debug('Requesting URL {}'.format(url))
 		response = requests.get(url)
-		logging.debug('Response code = {} and text = {}'.format(response.code, response.text))
+		logging.debug('Response code = {} and text = {}'.format(response.status_code, response.text))
 		if response.status_code == 200:
 			return {'ok': True, 'text': response.text}
 		else:
